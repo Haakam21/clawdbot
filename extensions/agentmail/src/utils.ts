@@ -21,7 +21,6 @@ export type CoreConfig = {
 /** Resolved AgentMail account with runtime state. */
 export type ResolvedAgentMailAccount = {
   accountId: string;
-  /** Account name for identifying this configuration. */
   name?: string;
   enabled: boolean;
   configured: boolean;

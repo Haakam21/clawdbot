@@ -16,18 +16,32 @@ export type MonitorAgentMailOptions = {
 };
 
 // Runtime state tracking
-const runtimeState = new Map<string, {
-  running: boolean;
-  lastStartAt: number | null;
-  lastStopAt: number | null;
-  lastError: string | null;
-  lastInboundAt?: number | null;
-  lastOutboundAt?: number | null;
-}>();
+const runtimeState = new Map<
+  string,
+  {
+    running: boolean;
+    lastStartAt: number | null;
+    lastStopAt: number | null;
+    lastError: string | null;
+    lastInboundAt?: number | null;
+    lastOutboundAt?: number | null;
+  }
+>();
 
-function recordState(accountId: string, state: Partial<typeof runtimeState extends Map<string, infer V> ? V : never>) {
+function recordState(
+  accountId: string,
+  state: Partial<typeof runtimeState extends Map<string, infer V> ? V : never>
+) {
   const key = `agentmail:${accountId}`;
-  runtimeState.set(key, { ...runtimeState.get(key) ?? { running: false, lastStartAt: null, lastStopAt: null, lastError: null }, ...state });
+  runtimeState.set(key, {
+    ...(runtimeState.get(key) ?? {
+      running: false,
+      lastStartAt: null,
+      lastStopAt: null,
+      lastError: null,
+    }),
+    ...state,
+  });
 }
 
 export function getAgentMailRuntimeState(accountId: string) {
@@ -47,7 +61,9 @@ function sendJson(res: ServerResponse, status: number, data: unknown) {
 }
 
 /** Builds message body from webhook payload as fallback when API fetch fails. */
-function buildFallbackBody(message: NonNullable<MessageReceivedEvent["message"]>): string {
+function buildFallbackBody(
+  message: NonNullable<MessageReceivedEvent["message"]>
+): string {
   const subject = message.subject ? `Subject: ${message.subject}\n\n` : "";
   return `${subject}${extractMessageBody(message)}`;
 }
@@ -98,7 +114,11 @@ export async function monitorAgentMailProvider(
   const allowlist = agentmailConfig?.allowlist ?? [];
   const blocklist = agentmailConfig?.blocklist ?? [];
 
-  recordState(accountId, { running: true, lastStartAt: Date.now(), lastError: null });
+  recordState(accountId, {
+    running: true,
+    lastStartAt: Date.now(),
+    lastError: null,
+  });
   logger.info(`AgentMail: starting monitor for ${inboxId}`);
 
   /**

@@ -140,7 +140,8 @@ export const agentmailPlugin: ChannelPlugin<ResolvedAgentMailAccount> = {
     validateInput: ({ input }) => {
       if (input.useEnv) return null;
       if (!input.token?.trim()) return "AgentMail requires --token";
-      if (!input.emailAddress?.trim()) return "AgentMail requires --email-address";
+      if (!input.emailAddress?.trim())
+        return "AgentMail requires --email-address";
       return null;
     },
     applyAccountConfig: ({ cfg, input }) => {
@@ -152,11 +153,17 @@ export const agentmailPlugin: ChannelPlugin<ResolvedAgentMailAccount> = {
           agentmail: {
             ...existing,
             enabled: true,
-            ...(input.useEnv ? {} : {
-              ...(input.token?.trim() ? { token: input.token.trim() } : {}),
-              ...(input.emailAddress?.trim() ? { emailAddress: input.emailAddress.trim() } : {}),
-              ...(input.webhookPath?.trim() ? { webhookPath: input.webhookPath.trim() } : {}),
-            }),
+            ...(input.useEnv
+              ? {}
+              : {
+                  ...(input.token?.trim() ? { token: input.token.trim() } : {}),
+                  ...(input.emailAddress?.trim()
+                    ? { emailAddress: input.emailAddress.trim() }
+                    : {}),
+                  ...(input.webhookPath?.trim()
+                    ? { webhookPath: input.webhookPath.trim() }
+                    : {}),
+                }),
           },
         },
       };

@@ -1,19 +1,19 @@
-# @clawdbot/agentmail
+# @moltbot/agentmail
 
-Email channel plugin for Clawdbot via [AgentMail](https://agentmail.to).
+Email channel plugin for Moltbot via [AgentMail](https://agentmail.to).
 
 ## Installation
 
 From npm:
 
 ```bash
-clawdbot plugins install @clawdbot/agentmail
+moltbot plugins install @moltbot/agentmail
 ```
 
 From local checkout:
 
 ```bash
-clawdbot plugins install ./extensions/agentmail
+moltbot plugins install ./extensions/agentmail
 ```
 
 ## Configuration

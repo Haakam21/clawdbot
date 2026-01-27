@@ -36,14 +36,20 @@ async function sendMessage(params: {
 /** Outbound adapter for the AgentMail channel. */
 export const agentmailOutbound: ChannelOutboundAdapter = {
   deliveryMode: "direct",
-  chunker: (text, limit) => getAgentMailRuntime().channel.text.chunkMarkdownText(text, limit),
+  chunker: (text, limit) =>
+    getAgentMailRuntime().channel.text.chunkMarkdownText(text, limit),
   chunkerMode: "markdown",
   textChunkLimit: 4000,
 
-  sendText: ({ to, text, replyToId }) => sendMessage({ to, text, replyToId: replyToId ?? undefined }),
+  sendText: ({ to, text, replyToId }) =>
+    sendMessage({ to, text, replyToId: replyToId ?? undefined }),
 
   sendMedia: ({ to, text, mediaUrl, replyToId }) => {
     const fullText = mediaUrl ? `${text}\n\nAttachment: ${mediaUrl}` : text;
-    return sendMessage({ to, text: fullText, replyToId: replyToId ?? undefined });
+    return sendMessage({
+      to,
+      text: fullText,
+      replyToId: replyToId ?? undefined,
+    });
   },
 };

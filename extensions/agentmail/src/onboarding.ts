@@ -1,7 +1,7 @@
 import { AgentMailClient } from "agentmail";
 import type {
   ChannelOnboardingAdapter,
-  ClawdbotConfig,
+  MoltbotConfig,
 } from "clawdbot/plugin-sdk";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "clawdbot/plugin-sdk";
 
@@ -51,9 +51,9 @@ async function listInboxes(client: AgentMailClient): Promise<string[]> {
 
 /** Helper to build config with agentmail channel updates. */
 export function updateAgentMailConfig(
-  cfg: ClawdbotConfig,
+  cfg: MoltbotConfig,
   updates: Partial<AgentMailConfig>
-): ClawdbotConfig {
+): MoltbotConfig {
   const channels = (cfg.channels ?? {}) as Record<string, unknown>;
   const agentmail = (channels.agentmail ?? {}) as AgentMailConfig;
   return {
@@ -65,7 +65,7 @@ export function updateAgentMailConfig(
         ...updates,
       },
     },
-  } as ClawdbotConfig;
+  } as MoltbotConfig;
 }
 
 export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
@@ -93,7 +93,7 @@ export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
       ? normalizeAccountId(accountOverrides.agentmail)
       : defaultAccountId;
 
-    let next = cfg as ClawdbotConfig;
+    let next = cfg as MoltbotConfig;
     const account = resolveAgentMailAccount({
       cfg: next as CoreConfig,
       accountId,
@@ -164,7 +164,8 @@ export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
 
     // Ask if gateway has a public URL
     const hasPublicUrl = await prompter.confirm({
-      message: "Does your gateway have a public URL? (for automatic webhook setup)",
+      message:
+        "Does your gateway have a public URL? (for automatic webhook setup)",
       initialValue: false,
     });
 
@@ -180,13 +181,18 @@ export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
           validate: (v) => {
             const trimmed = v?.trim();
             if (!trimmed) return "Required";
-            if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+            if (
+              !trimmed.startsWith("http://") &&
+              !trimmed.startsWith("https://")
+            ) {
               return "Must start with http:// or https://";
             }
             return undefined;
           },
         })
-      ).trim().replace(/\/+$/, ""); // Remove trailing slashes
+      )
+        .trim()
+        .replace(/\/+$/, ""); // Remove trailing slashes
 
       // Ask for webhook path
       const customPath = await prompter.confirm({
@@ -214,7 +220,7 @@ export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
         await client.webhooks.create({
           url: `${baseUrl}${webhookPath}`,
           eventTypes: ["message.received"],
-          clientId: `clawdbot-${emailAddress}`, // Idempotent per inbox
+          clientId: `moltbot-${emailAddress}`, // Idempotent per inbox
         });
         await prompter.note(
           `Webhook registered: ${baseUrl}${webhookPath}`,
@@ -266,7 +272,8 @@ export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
     if (addAllowlist) {
       const entry = String(
         await prompter.text({
-          message: "Email or domain to allow (e.g., user@example.com or example.com)",
+          message:
+            "Email or domain to allow (e.g., user@example.com or example.com)",
         })
       ).trim();
 
@@ -306,7 +313,7 @@ export const agentmailOnboardingAdapter: ChannelOnboardingAdapter = {
           "  Event: message.received",
           "",
           "The gateway must be publicly accessible for webhooks to work.",
-          "Without this, Clawdbot won't receive incoming emails.",
+          "Without this, Moltbot won't receive incoming emails.",
         ].join("\n"),
         "Webhook Setup Required"
       );

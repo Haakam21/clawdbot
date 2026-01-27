@@ -1,9 +1,9 @@
 {
-  "name": "@clawdbot/agentmail",
+  "name": "@moltbot/agentmail",
   "version": "2026.1.26",
   "type": "module",
-  "description": "Clawdbot AgentMail email channel plugin",
-  "clawdbot": {
+  "description": "Moltbot AgentMail email channel plugin",
+  "moltbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -18,7 +18,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@clawdbot/agentmail",
+      "npmSpec": "@moltbot/agentmail",
       "localPath": "extensions/agentmail",
       "defaultChoice": "npm"
     }

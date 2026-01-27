@@ -1,6 +1,10 @@
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "clawdbot/plugin-sdk";
 
-import type { AgentMailConfig, CoreConfig, ResolvedAgentMailAccount } from "./utils.js";
+import type {
+  AgentMailConfig,
+  CoreConfig,
+  ResolvedAgentMailAccount,
+} from "./utils.js";
 
 /**
  * Lists all AgentMail account IDs.
@@ -33,14 +37,15 @@ export type ResolvedAgentMailCredentials = {
  */
 export function resolveCredentials(
   cfg: CoreConfig,
-  env: Record<string, string | undefined> = process.env,
+  env: Record<string, string | undefined> = process.env
 ): ResolvedAgentMailCredentials {
   const base = cfg.channels?.agentmail ?? {};
   return {
     apiKey: base.token || env.AGENTMAIL_TOKEN,
     inboxId: base.emailAddress || env.AGENTMAIL_EMAIL_ADDRESS,
     webhookUrl: base.webhookUrl || env.AGENTMAIL_WEBHOOK_URL,
-    webhookPath: base.webhookPath || env.AGENTMAIL_WEBHOOK_PATH || "/webhooks/agentmail",
+    webhookPath:
+      base.webhookPath || env.AGENTMAIL_WEBHOOK_PATH || "/webhooks/agentmail",
   };
 }
 

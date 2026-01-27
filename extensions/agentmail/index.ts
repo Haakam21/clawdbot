@@ -1,4 +1,4 @@
-import type { ClawdbotPluginApi } from "clawdbot/plugin-sdk";
+import type { MoltbotPluginApi } from "clawdbot/plugin-sdk";
 import { emptyPluginConfigSchema } from "clawdbot/plugin-sdk";
 
 import { agentmailPlugin } from "./src/channel.js";
@@ -9,7 +9,7 @@ const plugin = {
   name: "AgentMail",
   description: "Email channel plugin via AgentMail API",
   configSchema: emptyPluginConfigSchema(),
-  register(api: ClawdbotPluginApi) {
+  register(api: MoltbotPluginApi) {
     setAgentMailRuntime(api.runtime);
     api.registerChannel({ plugin: agentmailPlugin });
   },
