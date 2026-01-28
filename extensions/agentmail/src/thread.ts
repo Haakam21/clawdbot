@@ -38,16 +38,15 @@ function formatMessageRecipients(msg: Message): string {
 
 function formatMessage(msg: Message): string {
   const attachments = formatAttachments(msg.attachments);
-  return [
-    `--- ${formatUtcDate(msg.createdAt)} ---`,
+  const parts = [
+    `--- ${formatUtcDate(msg.timestamp)} ---`,
     `From: ${msg.from}`,
     formatMessageRecipients(msg),
-    attachments,
-    "",
-    extractMessageBody(msg),
-  ]
-    .filter(Boolean)
-    .join("\n");
+  ];
+  if (attachments) parts.push(attachments);
+  parts.push(""); // blank line before body
+  parts.push(extractMessageBody(msg));
+  return parts.join("\n");
 }
 
 /**
